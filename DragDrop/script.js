@@ -27,19 +27,6 @@ function start() {
             DragElement.addEventListener("mousemove",Mouse_Move,false);
         }
 
-        function Mouse_Move(EO) {
-            EO=EO||window.event;
-            EO.preventDefault();
-            console.log(EO.pageX);
-            var DragElement=EO.target;
-            var shiftX = EO.pageX - getCoords(DragElement).left;
-            var  shiftY = EO.pageY - getCoords(DragElement).top;
-            DragElement.style.left=EO.pageX - shiftX +"px";
-            DragElement.style.top=EO.pageY -shiftY+ "px";
-
-
-        }
-
     }
     function Mouse_Up(EO) {
         EO=EO||window.event;
@@ -48,7 +35,18 @@ function start() {
         DragElement.removeEventListener("mousemove", Mouse_Move,false)
 
     }
+    function Mouse_Move(EO) {
+        EO=EO||window.event;
+        EO.preventDefault();
+        console.log(EO.pageX);
+        var DragElement=EO.target;
+        var shiftX = EO.pageX - getCoords(DragElement).left;
+        var  shiftY = EO.pageY - getCoords(DragElement).top;
+        DragElement.style.left=EO.pageX - DragElement.clientWidth/2 +"px";
+        DragElement.style.top=EO.pageY -DragElement.clientHeight/2+ "px";
 
+
+    }
     function getCoords(elem) { // кроме IE8-
         var box = elem.getBoundingClientRect();
 
