@@ -2,6 +2,8 @@
 document.addEventListener("DOMContentLoaded", start,false);
 function start() {
     var counter=0;
+    var mouseOffset;
+
     console.log('>');
     var arr=document.querySelectorAll(".container img");
     for(var i=0;i<arr.length;i++){
@@ -14,18 +16,18 @@ function start() {
         counter++;
         EO=EO||window.event;
         EO.preventDefault();
-        console.log(EO);
         var DragElement=EO.target;
         DragElement.style.position="absolute";
         DragElement.style.left= DragElement.offsetLeft + "px";
         DragElement.style.top= DragElement.offsetTop + "px";
         DragElement.style.zIndex=counter;
-        console.log(DragElement.offsetLeft);
         if (EO.which != 1) { // если клик правой кнопкой мыши
             return; // то он не запускает перенос
         } else {
             DragElement.addEventListener("mousemove",Mouse_Move,false);
         }
+        mouseOffset = getMouseOffset(DragElement, EO);
+        console.log(mouseOffset);
 
     }
     function Mouse_Up(EO) {
@@ -38,12 +40,9 @@ function start() {
     function Mouse_Move(EO) {
         EO=EO||window.event;
         EO.preventDefault();
-        console.log(EO.pageX);
         var DragElement=EO.target;
-        var shiftX = EO.pageX - getCoords(DragElement).left;
-        var  shiftY = EO.pageY - getCoords(DragElement).top;
-        DragElement.style.left=EO.pageX - DragElement.clientWidth/2 +"px";
-        DragElement.style.top=EO.pageY -DragElement.clientHeight/2+ "px";
+        DragElement.style.left=EO.pageX - mouseOffset.x +"px";
+        DragElement.style.top=EO.pageY -mouseOffset.y+ "px";
 
 
     }
@@ -55,6 +54,10 @@ function start() {
             left: box.left + pageXOffset
         };
 
+    }
+    function getMouseOffset(elem, EO) {
+        var docPos	= getCoords(elem);
+        return {x:EO.pageX - docPos.left, y:EO.pageY - docPos.top};
     }
 
 
