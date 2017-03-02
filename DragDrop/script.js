@@ -13,21 +13,22 @@ function start() {
     }
 
     function Mouse_Down(EO) {
-        counter++;
-        EO=EO||window.event;
-        EO.preventDefault();
-        var DragElement=EO.target;
-        DragElement.style.position="absolute";
-        DragElement.style.left= DragElement.offsetLeft + "px";
-        DragElement.style.top= DragElement.offsetTop + "px";
-        DragElement.style.zIndex=counter;
-        if (EO.which != 1) { // если клик правой кнопкой мыши
-            return; // то он не запускает перенос
+        if (EO.which != 1) {
+            return;
         } else {
+            counter++;
+            EO=EO||window.event;
+            EO.preventDefault();
+            var DragElement=EO.target;
+            DragElement.style.position="absolute";
+            DragElement.style.left= DragElement.offsetLeft + "px";
+            DragElement.style.top= DragElement.offsetTop + "px";
+            DragElement.style.zIndex=counter;
             DragElement.addEventListener("mousemove",Mouse_Move,false);
+            DragElement.classList.add("move");
         }
         mouseOffset = getMouseOffset(DragElement, EO);
-        console.log(mouseOffset);
+
 
     }
     function Mouse_Up(EO) {
@@ -35,6 +36,9 @@ function start() {
         EO.preventDefault();
         var DragElement=EO.target;
         DragElement.removeEventListener("mousemove", Mouse_Move,false)
+        DragElement.classList.remove("move");
+        DragElement.classList.add("basic");
+
 
     }
     function Mouse_Move(EO) {
@@ -43,8 +47,7 @@ function start() {
         var DragElement=EO.target;
         DragElement.style.left=EO.pageX - mouseOffset.x +"px";
         DragElement.style.top=EO.pageY -mouseOffset.y+ "px";
-
-
+        console.log(EO);
     }
     function getCoords(elem) { // кроме IE8-
         var box = elem.getBoundingClientRect();
@@ -59,6 +62,7 @@ function start() {
         var docPos	= getCoords(elem);
         return {x:EO.pageX - docPos.left, y:EO.pageY - docPos.top};
     }
+
 
 
 }
