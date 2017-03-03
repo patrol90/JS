@@ -1,26 +1,27 @@
 "use strict"
-document.addEventListener("DOMContentLoaded", start,false);
+//document.addEventListener("DOMContentLoaded", start,true);
+window.onload=start;
 function start() {
     var counter=0;
     var mouseOffset;
 
-    console.log('>');
-    var arr=document.querySelectorAll(".container img");
-    for(var i=0;i<arr.length;i++){
-        arr[i].addEventListener("mousedown",Mouse_Down,false);
-        arr[i].addEventListener("mouseup",Mouse_Up,false);
+        document.querySelectorAll("img").forEach(function (element) {
+            var left=getCoords(element).left+"px";
+            element.style.left=left;
+            element.addEventListener("mousedown",Mouse_Down,false);
+            element.addEventListener("mouseup",Mouse_Up,false);
+        });
+        document.styleSheets[0].insertRule("img { position: absolute; }", 0);
 
-    }
 
     function Mouse_Down(EO) {
         if (EO.which != 1) {
             return;
-        } else {
+        } else { 
             counter++;
             EO=EO||window.event;
             EO.preventDefault();
             var DragElement=EO.target;
-            DragElement.style.position="absolute";
             DragElement.style.left= DragElement.offsetLeft + "px";
             DragElement.style.top= DragElement.offsetTop + "px";
             DragElement.style.zIndex=counter;
@@ -49,9 +50,7 @@ function start() {
         DragElement.style.left=EO.pageX - mouseOffset.x +"px";
         DragElement.style.top=EO.pageY -mouseOffset.y+ "px";
         DragElement.onmouseout=function () {
-            console.log("out");
-            document.onmousemove=Mouse_Move_Out; //работает
-            //document.addEventListener("onmousemove",Mouse_Move_Out,false); // не работает)))
+            document.onmousemove=Mouse_Move_Out;
         };
 
         function Mouse_Move_Out(EO) {
@@ -75,7 +74,6 @@ function start() {
         var docPos	= getCoords(elem);
         return {x:EO.pageX - docPos.left, y:EO.pageY - docPos.top};
     }
-
-
-
 }
+
+
