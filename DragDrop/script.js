@@ -25,7 +25,8 @@ function start() {
             DragElement.style.top= DragElement.offsetTop + "px";
             DragElement.style.zIndex=counter;
             DragElement.addEventListener("mousemove",Mouse_Move,false);
-            DragElement.classList.add("move");
+            DragElement.style.cursor="pointer";
+
         }
         mouseOffset = getMouseOffset(DragElement, EO);
 
@@ -36,9 +37,9 @@ function start() {
         EO.preventDefault();
         var DragElement=EO.target;
         DragElement.removeEventListener("mousemove", Mouse_Move,false)
-        DragElement.classList.remove("move");
-        DragElement.classList.add("basic");
-
+        document.onmousemove=null; //работает
+        DragElement.onmouseout=null;
+        DragElement.style.cursor="move";
 
     }
     function Mouse_Move(EO) {
@@ -47,7 +48,19 @@ function start() {
         var DragElement=EO.target;
         DragElement.style.left=EO.pageX - mouseOffset.x +"px";
         DragElement.style.top=EO.pageY -mouseOffset.y+ "px";
-        console.log(EO);
+        DragElement.onmouseout=function () {
+            console.log("out");
+            document.onmousemove=Mouse_Move_Out; //работает
+            //document.addEventListener("onmousemove",Mouse_Move_Out,false); // не работает)))
+        };
+
+        function Mouse_Move_Out(EO) {
+            EO=EO||window.event;
+            EO.preventDefault();
+            DragElement.style.left=EO.pageX - mouseOffset.x +"px";
+            DragElement.style.top=EO.pageY -mouseOffset.y+ "px";
+        }
+
     }
     function getCoords(elem) { // кроме IE8-
         var box = elem.getBoundingClientRect();
