@@ -109,6 +109,7 @@
       hour.style.position="absolute";
       hour.style.top=top;
       hour.style.left=left;
+      Updateclock();
       clock.appendChild(hour);
     }
 
@@ -138,7 +139,7 @@
       var H =CurrTime.getHours();
       var M =CurrTime.getMinutes();
       var S=CurrTime.getSeconds();
-      var HAngle=H*HourToAngle-StartAngle;
+      var HAngle=H*HourToAngle-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
       HourArrow.style.transform="rotate("+HAngle+"deg)";
       var MAngle=M*MinuteToAngle-StartAngle;
       MinuteArrow.style.transform="rotate("+MAngle+"deg)";
