@@ -13,7 +13,8 @@ function AddClock() {
     var radius = 90; // Радиус нашего круга
     var ColorOfArrows="black";
     var ColorOfHour="#48b382";
-    var RadiusOfHour="30px";
+    var TextLenHour ="12";
+    var RadiusOfHour="30";
     var ArrowsTransformOrigin="7";
     var WidthOfArrow={HourArrow:"10",MinuteArrow:"7",SecondArrow:"3"};
     var HeightOfArrow={HourArrow:"70",MinuteArrow:"90",SecondArrow:"100"};
@@ -81,16 +82,32 @@ function AddClock() {
 
 
     for (var  i=num;i>0; i--){
-        var hour = document.createElement("span");
-        hour.appendChild(document.createTextNode(i));
+
+        var hour=document.createElementNS("http://www.w3.org/2000/svg",'circle');
+        var text=document.createElementNS("http://www.w3.org/2000/svg",'text');
+        text.appendChild(document.createTextNode(i));
+
         var f = 2 / num * i * Math.PI;
-        var left = wrap + radius * Math.sin(f) + 'px';
-        var top = wrap - radius * Math.cos(f) + 'px';
-        hour.style.position="absolute";
+        var left = wrap + radius * Math.sin(f) ;
+        var top = wrap - radius * Math.cos(f) ;
         hour.style.top=top;
         hour.style.left=left;
+
+        hour.setAttribute( "cx", left + RadiusOfHour/2);
+        hour.setAttribute( "cy", top + RadiusOfHour/2 );
+        hour.setAttribute( "r", RadiusOfHour/2 );
+        hour.setAttribute( "stroke", ColorOfHour );
+        hour.setAttribute( "fill", ColorOfHour );
+        text.setAttribute("textLength",TextLenHour);
+        text.setAttribute("lengthAdjust","spacing");
+        text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2);
+        text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
+
         //Updateclock();
-        clock.appendChild(hour);
+
+        svg.appendChild(hour);
+        svg.appendChild(text);
+
     }
 
     function FormatDateTime(DT)
