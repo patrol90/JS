@@ -22,17 +22,15 @@ function AddClock() {
     var MinuteToAngle=6;
     var HourToAngle=30;
     var StartAngle=180;
-    var ArrowsOpacity="0.9";
+    var ArrowsOpacity="0.8";
     var HourArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var MinuteArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var SecondArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
-    var TextClock=document.createElement("div");
-
+    var TextClock=document.createElementNS("http://www.w3.org/2000/svg",'text');
     var CurrTime= new Date;
 
 
     var svg=document.getElementsByTagName('svg')[0];
-
     var clock=document.createElementNS("http://www.w3.org/2000/svg",'circle');
 
     clock.setAttribute( "id", "clock" );
@@ -42,9 +40,6 @@ function AddClock() {
     clock.setAttribute( "stroke", ClockBackground );
     clock.setAttribute( "fill", ClockBackground );
 
-    TextClock.style.marginTop="4em";
-    TextClock.style.textAlign="center";
-    TextClock.style.font="16px sans-serif";
 
     var Arrows=[HourArrow,MinuteArrow,SecondArrow];
     HourArrow.setAttribute("width",WidthOfArrow.HourArrow);
@@ -61,23 +56,8 @@ function AddClock() {
     HourArrow.setAttribute("ry",WidthOfArrow.HourArrow);
 
 
-
     svg.appendChild(clock);
-    clock.appendChild(TextClock);
-//    <rect x=10 y=45 width=100 height=30  stroke='#FF0000' fill=yellow />
-
-
-    for (var j=0;j<Arrows.length;j++){
-        svg.appendChild(Arrows[j]);
-        Arrows[j].setAttribute( "x", ClockRadius/2 );
-        Arrows[j].setAttribute( "y", ClockRadius/2 );
-        Arrows[j].setAttribute( "stroke", ColorOfArrows );
-        Arrows[j].setAttribute( "fill", ColorOfArrows );
-        console.log( Arrows[j]);
-
-
-
-    }
+    svg.appendChild(TextClock);
 
 
 
@@ -85,6 +65,8 @@ function AddClock() {
 
         var hour=document.createElementNS("http://www.w3.org/2000/svg",'circle');
         var text=document.createElementNS("http://www.w3.org/2000/svg",'text');
+
+
         text.appendChild(document.createTextNode(i));
 
         var f = 2 / num * i * Math.PI;
@@ -100,15 +82,33 @@ function AddClock() {
         hour.setAttribute( "fill", ColorOfHour );
         text.setAttribute("textLength",TextLenHour);
         text.setAttribute("lengthAdjust","spacing");
-        text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2);
-        text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
+        if (i>9){ //костыль на варавнивание текста :)
 
-        //Updateclock();
+            text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2-2);
+            text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
+        } else {
+            text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2+1);
+            text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
+        }
+        Updateclock();
 
         svg.appendChild(hour);
         svg.appendChild(text);
 
     }
+
+    for (var j=0;j<Arrows.length;j++){
+        svg.appendChild(Arrows[j]);
+        Arrows[j].setAttribute( "x", ClockRadius/2 - Arrows[j].getBBox().width/2 );
+        Arrows[j].setAttribute( "y", ClockRadius/2 -ArrowsTransformOrigin );
+        Arrows[j].setAttribute( "fill", ColorOfArrows );
+        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
+        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
+        Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "%";
+    }
+
+
+
 
     function FormatDateTime(DT)
     {
@@ -143,9 +143,13 @@ function AddClock() {
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
         var NowTime=FormatDateTime(CurrTime);
         TextClock.innerHTML=NowTime;
+        TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
+        TextClock.setAttribute('y',ClockRadius/3);
     }
 
-    //setInterval(Updateclock,1000);
+    setInterval(Updateclock,1000);
     document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;"
-    document.head.querySelector("style").innerHTML="span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}";
+    document.head.querySelector("style").innerHTML="body > svg > text{font-weight: 600 ;  font-family: Arial;}";
+
+
 }
