@@ -203,7 +203,7 @@ function Start()
         BallH.PosY=AreaH.Width/2-BallH.Width/2;
         requestAnimationFrame(Tick);
     } else {
-        // плавное движение - от 25 кадр/сек
+
         requestAnimationFrame(Tick);
     }
 
@@ -226,7 +226,6 @@ function Tick()
         }
 
 
-
         // вылетел ли мяч правее стены?
         if (BallH.PosX + BallH.Width > AreaH.Width) {
             //BallH.SpeedX=-BallH.SpeedX;
@@ -244,7 +243,6 @@ function Tick()
             document.querySelector("#counter").innerHTML = AreaH.TeamLeft + ":" + AreaH.TeamRight;
             AreaH.goal=true;
         }
-
 
 
         if (AreaH.DirectionY) {
@@ -266,23 +264,20 @@ function Tick()
             BallH.SpeedY = -BallH.SpeedY;
         }
 
-        console.log(BallH.PosY);
 
 
         BallH.Update();
 
         var BallRight = BallH.PosX + BallH.Width;
-        var BallBottom = BallH.PosY + BallH.Height;
 
-
-
+        //left block
         if (BallH.PosX < (AreaH.BlockLeft.PosX + AreaH.BlockLeft.Width) && BallH.PosY > AreaH.BlockLeft.PosY && BallH.PosY < (AreaH.BlockLeft.PosY + AreaH.BlockLeft.Height) || BallH.PosX < (AreaH.BlockLeft.PosX + AreaH.BlockLeft.Width)&& (BallH.PosY+BallH.Height)>AreaH.BlockLeft.PosY && BallH.PosY<AreaH.BlockLeft.PosY) {
 
             BallH.SpeedX = -BallH.SpeedX;
             BallH.PosX = AreaH.BlockLeft.Width;
-
         }
 
+        //right block
         if (BallRight > AreaH.BlockRight.PosX && BallH.PosY > AreaH.BlockRight.PosY && BallH.PosY < (AreaH.BlockRight.PosY + AreaH.BlockRight.Height ) || BallRight > AreaH.BlockRight.PosX && (BallH.PosY+BallH.Height)>AreaH.BlockRight.PosY && BallH.PosY<AreaH.BlockRight.PosY ) {
 
             BallH.SpeedX = -BallH.SpeedX;
@@ -295,10 +290,7 @@ function Tick()
         if(confirm("Are you ready?")){
             Start();
         }
-
     }
-
-
 
 }
 BallH.Create();
