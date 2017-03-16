@@ -10,12 +10,14 @@ var AreaH=
     TeamLeft :0,
     TeamRight :0,
     goal: false,
+    start:false,
     DirectionX:1,
     DirectionY:1,
     BlockLeft:{
         PosX : 0,
         PosY : 0,
-        SpeedY : 30,
+        SpeedY : 0,
+        AccelY : 2,
         Width : 15,
         Height: 100,
         color: "#09aa57"
@@ -23,7 +25,8 @@ var AreaH=
     BlockRight:{
         PosX : 0,
         PosY : 0,
-        SpeedY : 30,
+        SpeedY : 0,
+        AccelY : 2,
         Width : 15,
         Height: 100,
         color: "#191497"
@@ -34,8 +37,8 @@ var BallH=
 {
     PosX : 0,
     PosY : 10,
-    SpeedX : 2,
-    SpeedY : 2,
+    SpeedX : 1,
+    SpeedY : 1,
     AccelX : 0,
     AccelY : 0.5,
     Width : 50,
@@ -76,6 +79,7 @@ var BallH=
 
         //Left
         var LeftBlock=document.createElement('div');
+        LeftBlock.id="LeftBlock";
         LeftBlock.style.width=AreaH.BlockLeft.Width +"px";
         LeftBlock.style.height=AreaH.BlockLeft.Height +"px";
         LeftBlock.style.background=AreaH.BlockLeft.color;
@@ -87,6 +91,7 @@ var BallH=
 
         //Right
         var RightBlock=document.createElement('div');
+        RightBlock.id="RightBlock";
         RightBlock.style.width=AreaH.BlockRight.Width +"px";
         RightBlock.style.height=AreaH.BlockRight.Height+"px";
         RightBlock.style.background=AreaH.BlockRight.color;
@@ -101,32 +106,39 @@ var BallH=
         document.querySelector("body").appendChild(Area);
         document.addEventListener("keydown",InputKey,false);
         document.addEventListener("keydown",InputKey2,false);
-
+        document.addEventListener("keyup",InputKeyFalse,false);
+        document.addEventListener("keyup",InputKey2False,false);
 
 
         function InputKey(EO) //left
         {
             EO=EO||window.event;
             var PressedChar=EO.keyCode;
+
+
             switch (PressedChar){
                 case 16:
+                    EO.preventDefault();
                     if(AreaH.BlockLeft.PosY>0) {
-                        console.log(AreaH.BlockLeft.PosY);
+                        AreaH.BlockLeft.SpeedY+=AreaH.BlockLeft.AccelY;
                         AreaH.BlockLeft.PosY-=AreaH.BlockLeft.SpeedY;
-                        requestAnimationFrame(function () {
+
+                       /*requestAnimationFrame(function () {
                             LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY) +"px";
-                        })
+                        })*/
                     }
                     break;
 
                 case 17:
-
+                    EO.preventDefault();
                     if(AreaH.BlockLeft.PosY< (AreaH.Height-AreaH.BlockLeft.Height) ) {
-                        console.log(AreaH.BlockLeft.PosY);
+                        AreaH.BlockLeft.SpeedY+=AreaH.BlockLeft.AccelY;
                         AreaH.BlockLeft.PosY+=AreaH.BlockLeft.SpeedY;
-                        requestAnimationFrame(function () {
+
+
+                        /*requestAnimationFrame(function () {
                             LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY) +"px";
-                        })
+                        })*/
                     }
                     break;
             }
@@ -137,35 +149,56 @@ var BallH=
                 AreaH.BlockLeft.PosY=0;
             }
         }
+
+        function InputKeyFalse(EO) {
+            EO=EO||window.event;
+            var PressedChar=EO.keyCode;
+            if  (PressedChar==16 || PressedChar==17){
+                AreaH.BlockLeft.SpeedY=0;
+
+            }
+        }
+        function InputKey2False(EO) {
+            EO=EO||window.event;
+            var PressedChar=EO.keyCode;
+            if  (PressedChar==38 || PressedChar==40){
+                AreaH.BlockRight.SpeedY=0;
+
+            }
+        }
         function InputKey2(EO) //right
         {
             EO=EO||window.event;
-
             var PressedChar=EO.keyCode;
             console.log(PressedChar);
             switch (PressedChar){
 
 
                 case 38:
-
+                    EO.preventDefault();
                     if(AreaH.BlockRight.PosY>0) {
-                        console.log(AreaH.BlockRight.PosY);
+                        AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
                         AreaH.BlockRight.PosY-=AreaH.BlockRight.SpeedY;
+
+                        /*AreaH.BlockRight.PosY-=AreaH.BlockRight.SpeedY;
                         requestAnimationFrame(function () {
                             RightBlock.style.top=Math.round(AreaH.BlockRight.PosY) +"px";
-                        })
+                        })*/
                     } else {
                         AreaH.BlockRight.PosY=0;
                     }
                     break;
 
                 case 40:
+                    EO.preventDefault();
                     if(AreaH.BlockRight.PosY< (AreaH.Height-AreaH.BlockRight.Height) ) {
-                        console.log(AreaH.BlockRight.PosY);
+                        AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
                         AreaH.BlockRight.PosY+=AreaH.BlockRight.SpeedY;
+
+                        /*AreaH.BlockRight.PosY+=AreaH.BlockRight.SpeedY;
                         requestAnimationFrame(function () {
                             RightBlock.style.top=Math.round(AreaH.BlockRight.PosY) +"px";
-                        })
+                        })*/
                     } else {
                         AreaH.BlockRight.PosY=AreaH.Height-AreaH.BlockRight.Height;
                     }
@@ -184,6 +217,12 @@ var BallH=
     },
     Update : function() {
         var BallObj=document.querySelector("#Ball");
+        var LeftBlock=document.querySelector("#LeftBlock");
+        var RightBlock=document.querySelector("#RightBlock");
+
+        LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY)+"px";
+        RightBlock.style.top=Math.round(AreaH.BlockRight.PosY)+ "px";
+
         BallObj.style.left = Math.round(this.PosX) + "px";
         BallObj.style.top = Math.round(this.PosY) + "px";
 
@@ -194,37 +233,43 @@ var BallH=
 
 function Start()
 {
+
     AreaH.DirectionX=getRandomInt(0,1);
     AreaH.DirectionY=getRandomInt(0,1);
 
     if (AreaH.goal){
         AreaH.goal=false;
-        BallH.PosX=AreaH.Height/2-BallH.Height/2;
-        BallH.PosY=AreaH.Width/2-BallH.Width/2;
-        requestAnimationFrame(Tick);
-    } else {
-
-        requestAnimationFrame(Tick);
+        BallH.PosY=AreaH.Height/2-BallH.Height/2;
+        BallH.PosX=AreaH.Width/2-BallH.Width/2;
+        BallH.Update();
+        Tick();
     }
 
     function getRandomInt(min, max)
     {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+    AreaH.start=true;
 }
 
 function Tick()
 {
     if (!AreaH.goal) {
 
+        if(AreaH.start){
+            BallH.SpeedX += BallH.AccelX;
+            if (AreaH.DirectionX){
+                BallH.PosX += BallH.SpeedX;
+            } else {
+                BallH.PosX -= BallH.SpeedX;
+            }
 
-        BallH.SpeedX += BallH.AccelX;
-        if (AreaH.DirectionX){
-            BallH.PosX += BallH.SpeedX;
-        } else {
-            BallH.PosX -= BallH.SpeedX;
+            if (AreaH.DirectionY) {
+                BallH.PosY += BallH.SpeedY;
+            } else {
+                BallH.PosY -= BallH.SpeedY;
+            }
         }
-
 
         // вылетел ли мяч правее стены?
         if (BallH.PosX + BallH.Width > AreaH.Width) {
@@ -245,11 +290,7 @@ function Tick()
         }
 
 
-        if (AreaH.DirectionY) {
-            BallH.PosY += BallH.SpeedY;
-        } else {
-            BallH.PosY -= BallH.SpeedY;
-        }
+
 
 
 
@@ -283,6 +324,9 @@ function Tick()
             BallH.SpeedX = -BallH.SpeedX;
             BallH.PosX = AreaH.Width - AreaH.BlockRight.Width - BallH.Width;
         }
+
+
+
         requestAnimationFrame(Tick);
 
     } else {
@@ -293,5 +337,7 @@ function Tick()
     }
 
 }
+
+
 BallH.Create();
-BallH.Update();
+Tick();
