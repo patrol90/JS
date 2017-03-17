@@ -17,7 +17,7 @@ var AreaH=
         PosX : 0,
         PosY : 0,
         SpeedY : 0,
-        AccelY : 2,
+        AccelY : 1,
         Width : 15,
         Height: 100,
         color: "#09aa57"
@@ -26,7 +26,7 @@ var AreaH=
         PosX : 0,
         PosY : 0,
         SpeedY : 0,
-        AccelY : 2,
+        AccelY : 1,
         Width : 15,
         Height: 100,
         color: "#191497"
@@ -115,17 +115,12 @@ var BallH=
             EO=EO||window.event;
             var PressedChar=EO.keyCode;
 
-
             switch (PressedChar){
                 case 16:
                     EO.preventDefault();
-                    if(AreaH.BlockLeft.PosY>0) {
-                        AreaH.BlockLeft.SpeedY+=AreaH.BlockLeft.AccelY;
-                        AreaH.BlockLeft.PosY-=AreaH.BlockLeft.SpeedY;
 
-                       /*requestAnimationFrame(function () {
-                            LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY) +"px";
-                        })*/
+                    if(AreaH.BlockLeft.PosY>0) {
+                        AreaH.BlockLeft.SpeedY-=AreaH.BlockLeft.AccelY;
                     }
                     break;
 
@@ -133,12 +128,6 @@ var BallH=
                     EO.preventDefault();
                     if(AreaH.BlockLeft.PosY< (AreaH.Height-AreaH.BlockLeft.Height) ) {
                         AreaH.BlockLeft.SpeedY+=AreaH.BlockLeft.AccelY;
-                        AreaH.BlockLeft.PosY+=AreaH.BlockLeft.SpeedY;
-
-
-                        /*requestAnimationFrame(function () {
-                            LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY) +"px";
-                        })*/
                     }
                     break;
             }
@@ -175,15 +164,9 @@ var BallH=
 
 
                 case 38:
-                    EO.preventDefault();
                     if(AreaH.BlockRight.PosY>0) {
-                        AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
-                        AreaH.BlockRight.PosY-=AreaH.BlockRight.SpeedY;
+                        AreaH.BlockRight.SpeedY-=AreaH.BlockRight.AccelY;
 
-                        /*AreaH.BlockRight.PosY-=AreaH.BlockRight.SpeedY;
-                        requestAnimationFrame(function () {
-                            RightBlock.style.top=Math.round(AreaH.BlockRight.PosY) +"px";
-                        })*/
                     } else {
                         AreaH.BlockRight.PosY=0;
                     }
@@ -193,17 +176,14 @@ var BallH=
                     EO.preventDefault();
                     if(AreaH.BlockRight.PosY< (AreaH.Height-AreaH.BlockRight.Height) ) {
                         AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
-                        AreaH.BlockRight.PosY+=AreaH.BlockRight.SpeedY;
 
-                        /*AreaH.BlockRight.PosY+=AreaH.BlockRight.SpeedY;
-                        requestAnimationFrame(function () {
-                            RightBlock.style.top=Math.round(AreaH.BlockRight.PosY) +"px";
-                        })*/
                     } else {
                         AreaH.BlockRight.PosY=AreaH.Height-AreaH.BlockRight.Height;
                     }
                     break;
             }
+            EO.preventDefault();
+
             if(AreaH.BlockRight.PosY> (AreaH.Height-AreaH.BlockRight.Height) ){
                 AreaH.BlockRight.PosY=AreaH.Height-AreaH.BlockRight.Height;
             }
@@ -270,6 +250,9 @@ function Tick()
                 BallH.PosY -= BallH.SpeedY;
             }
         }
+
+        AreaH.BlockLeft.PosY+=AreaH.BlockLeft.SpeedY;
+        AreaH.BlockRight.PosY+=AreaH.BlockRight.SpeedY;
 
         // вылетел ли мяч правее стены?
         if (BallH.PosX + BallH.Width > AreaH.Width) {
