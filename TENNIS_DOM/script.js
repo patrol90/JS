@@ -48,6 +48,8 @@ var BallH=
 
     Create : function () {
         //Area
+
+        
         var Area=document.createElement('div');
         Area.style.width=AreaH.Width + "px";
         Area.style.height=AreaH.Height + "px";
