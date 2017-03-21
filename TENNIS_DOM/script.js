@@ -47,66 +47,33 @@ var BallH=
 
 
     Create : function () {
-        //Area
-
-        
-        var Area=document.createElement('div');
-        Area.style.width=AreaH.Width + "px";
-        Area.style.height=AreaH.Height + "px";
-        Area.style.border="1px solid black";
-        Area.style.overflow="hidden";
-        Area.style.position="relative";
-        Area.style.background=AreaH.Background;
-
-        var Counter=document.createElement('div');
-        Counter.id="counter";
-        Counter.style.fontSize="40px";
-        Counter.style.display="inline-block";
-        Counter.style.marginLeft="2em";
-        Counter.style.fontFamily="arial";
-        var TextCounter=document.createTextNode("0:0");
-        Counter.appendChild(TextCounter);
 
 
-        //Ball
-        var BallObj=document.createElement('div');
-        BallObj.style.background=BallH.color;
-        BallObj.id="Ball";
-        BallH.PosY=AreaH.Height/2-BallH.Height/2;
-        BallH.PosX=AreaH.Width/2-BallH.Width/2;
-        BallObj.style.width=BallH.Width + "px";
-        BallObj.style.height=BallH.Height + "px";
-        BallObj.style.borderRadius=BallH.Width/2 + "px";
-        BallObj.style.position="absolute";
-        Area.appendChild(BallObj);
+        AreaH.BlockLeft.PosX=0;
+        AreaH.BlockLeft.PosY=AreaH.Height/2-AreaH.BlockLeft.Height/2;
 
-        //Left
-        var LeftBlock=document.createElement('div');
-        LeftBlock.id="LeftBlock";
-        LeftBlock.style.width=AreaH.BlockLeft.Width +"px";
-        LeftBlock.style.height=AreaH.BlockLeft.Height +"px";
-        LeftBlock.style.background=AreaH.BlockLeft.color;
-        LeftBlock.style.left=AreaH.BlockLeft.PosX+"px";
-        LeftBlock.style.position="absolute";
-        LeftBlock.style.top=AreaH.Height/2 -AreaH.BlockLeft.Height/2+"px";
-        AreaH.BlockLeft.PosY=AreaH.Height/2 -AreaH.BlockLeft.Height/2;
-        Area.appendChild(LeftBlock);
-
-        //Right
-        var RightBlock=document.createElement('div');
-        RightBlock.id="RightBlock";
-        RightBlock.style.width=AreaH.BlockRight.Width +"px";
-        RightBlock.style.height=AreaH.BlockRight.Height+"px";
-        RightBlock.style.background=AreaH.BlockRight.color;
-        RightBlock.style.left=AreaH.Width-AreaH.BlockRight.Width + "px";
-        RightBlock.style.position="absolute";
-        RightBlock.style.top=AreaH.Height/2 -AreaH.BlockRight.Height/2+"px";
-        AreaH.BlockRight.PosY=AreaH.Height/2 -AreaH.BlockRight.Height/2;
         AreaH.BlockRight.PosX=AreaH.Width-AreaH.BlockRight.Width;
-        Area.appendChild(RightBlock);
+        AreaH.BlockRight.PosY=AreaH.Height/2-AreaH.BlockRight.Height/2;
 
-        document.querySelector("body").appendChild(Counter);
+        BallH.PosX=AreaH.Width/2-BallH.Width/2;
+        BallH.PosY=AreaH.Height/2-BallH.Height/2;
+
+        var BackgrounArea=document.createElement('canvas');
+        BackgrounArea.setAttribute("width",AreaH.Width);
+        BackgrounArea.setAttribute("height",AreaH.Height);
+        var Context = BackgrounArea.getContext('2d');
+        Context.fillStyle=AreaH.Background;
+        Context.fillRect(0,0,AreaH.Width,AreaH.Height);
+
+        var Area=document.createElement('canvas');
+        Area.setAttribute("width",AreaH.Width);
+        Area.setAttribute("height",AreaH.Height-1);
+        Area.id='move';
+
+
+        document.querySelector("body").appendChild(BackgrounArea);
         document.querySelector("body").appendChild(Area);
+
         document.addEventListener("keydown",InputKey,false);
         document.addEventListener("keydown",InputKey2,false);
         document.addEventListener("keyup",InputKeyFalse,false);
@@ -154,30 +121,44 @@ var BallH=
                 case 38:
                     EO.preventDefault();
                         AreaH.BlockRight.SpeedY-=AreaH.BlockRight.AccelY;
-
                     break;
 
                 case 40:
                     EO.preventDefault();
                         AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
-
-
                     break;
             }
         }
 
 
     },
+
     Update : function() {
-        var BallObj=document.querySelector("#Ball");
-        var LeftBlock=document.querySelector("#LeftBlock");
-        var RightBlock=document.querySelector("#RightBlock");
+        var canvas = document.querySelectorAll('canvas')[1];
+        var Context = canvas.getContext('2d');
+        Context.clearRect(0, 0, AreaH.Width, AreaH.Height);
 
-        LeftBlock.style.top=Math.round(AreaH.BlockLeft.PosY)+"px";
-        RightBlock.style.top=Math.round(AreaH.BlockRight.PosY)+ "px";
+        Context.fillStyle='black';
+        Context.font='bold 28px Arial';
+        var Text=AreaH.TeamLeft+':'+ AreaH.TeamRight;
+        var TextLen=Context.measureText(Text).width;
+        Context.fillText(Text,AreaH.Width/2-TextLen/2,30);
 
-        BallObj.style.left = Math.round(this.PosX) + "px";
-        BallObj.style.top = Math.round(this.PosY) + "px";
+        var Round=Context;
+        Round.beginPath();
+        Round.arc(BallH.PosX+BallH.Width/2,BallH.PosY+BallH.Height/2,BallH.Width/2,0,2*Math.PI);
+        Round.fillStyle=BallH.color;
+        Round.fill();
+
+
+        var LeftBlock=Context;
+        LeftBlock.fillStyle=AreaH.BlockLeft.color;
+        LeftBlock.fillRect( AreaH.BlockLeft.PosX, AreaH.BlockLeft.PosY,AreaH.BlockLeft.Width,AreaH.BlockLeft.Height);
+
+        var RightBlock=Context;
+        RightBlock.fillStyle=AreaH.BlockRight.color;
+        RightBlock.fillRect(AreaH.BlockRight.PosX,AreaH.BlockRight.PosY,AreaH.BlockRight.Width,AreaH.BlockRight.Height);
+
 
     }
 };
@@ -254,7 +235,6 @@ function Tick()
             //BallH.SpeedX=-BallH.SpeedX;
             BallH.PosX = AreaH.Width - BallH.Width;
             AreaH.TeamLeft++;
-            document.querySelector("#counter").innerHTML = AreaH.TeamLeft + ":" + AreaH.TeamRight;
             AreaH.goal=true;
         }
 
@@ -263,7 +243,6 @@ function Tick()
             //BallH.SpeedX=-BallH.SpeedX;
             BallH.PosX = 0;
             AreaH.TeamRight++;
-            document.querySelector("#counter").innerHTML = AreaH.TeamLeft + ":" + AreaH.TeamRight;
             AreaH.goal=true;
         }
         
@@ -297,6 +276,9 @@ function Tick()
         
         requestAnimationFrame(Tick);
     } else {
+
+        AreaH.BlockLeft.SpeedY=0;
+        AreaH.BlockRight.SpeedY=0;
         alert("Goaal!");
         if(confirm("Are you ready?")){
             Start();
