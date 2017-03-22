@@ -13,102 +13,71 @@ function AddClock() {
     var radius = 90; // Радиус нашего круга
     var ColorOfArrows="black";
     var ColorOfHour="#48b382";
-    var TextLenHour ="12";
-    var RadiusOfHour="30";
+    var RadiusOfHour="30px";
     var ArrowsTransformOrigin="7";
     var WidthOfArrow={HourArrow:"10",MinuteArrow:"7",SecondArrow:"3"};
     var HeightOfArrow={HourArrow:"70",MinuteArrow:"90",SecondArrow:"100"};
-    var SecondToAngle=6;
+    var SecondToAngle=360/60;
     var MinuteToAngle=6;
-    var HourToAngle=30;
+    var HourToAngle=360/12;
     var StartAngle=180;
-    var ArrowsOpacity="0.8";
-    var HourArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
-    var MinuteArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
-    var SecondArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
-    var TextClock=document.createElementNS("http://www.w3.org/2000/svg",'text');
+    var ArrowsOpacity="0.9";
+    var HourArrow=document.createElement("div");
+    var MinuteArrow=document.createElement("div");
+    var SecondArrow=document.createElement("div");
+    var TextClock=document.createElement("div");
     var CurrTime= new Date;
 
-
-    var svg=document.getElementsByTagName('svg')[0];
-    var clock=document.createElementNS("http://www.w3.org/2000/svg",'circle');
+    
+    
+    var clock=document.createElement("div");
 
     clock.setAttribute( "id", "clock" );
-    clock.setAttribute( "cx", ClockRadius/2 );
-    clock.setAttribute( "cy", ClockRadius/2 );
-    clock.setAttribute( "r", ClockRadius/2 );
-    clock.setAttribute( "stroke", ClockBackground );
-    clock.setAttribute( "fill", ClockBackground );
-
-
+    clock.style.cssText="width:"+ClockRadius+"px;height:"+ClockRadius+"px;border-radius:"+ClockRadius+"px;background:"+ClockBackground+";position:absolute;";
+    TextClock.style.marginTop="4em";
+    TextClock.style.textAlign="center";
+    TextClock.style.font="16px sans-serif";
+    
+    HourArrow.style.width=WidthOfArrow.HourArrow + "px";
+    HourArrow.style.height=HeightOfArrow.HourArrow + "px";
+    MinuteArrow.style.width=WidthOfArrow.MinuteArrow + "px";
+    MinuteArrow.style.height=HeightOfArrow.MinuteArrow + "px";
+    SecondArrow.style.width=WidthOfArrow.SecondArrow + "px";
+    SecondArrow.style.height=HeightOfArrow.SecondArrow + "px";
     var Arrows=[HourArrow,MinuteArrow,SecondArrow];
-    HourArrow.setAttribute("width",WidthOfArrow.HourArrow);
-    HourArrow.setAttribute("height",HeightOfArrow.HourArrow);
-    MinuteArrow.setAttribute("width",WidthOfArrow.MinuteArrow);
-    MinuteArrow.setAttribute("height",HeightOfArrow.MinuteArrow);
-    SecondArrow.setAttribute("width",WidthOfArrow.SecondArrow);
-    SecondArrow.setAttribute("height",HeightOfArrow.SecondArrow);
-    SecondArrow.setAttribute("rx",WidthOfArrow.SecondArrow);
-    SecondArrow.setAttribute("ry",WidthOfArrow.SecondArrow);
-    MinuteArrow.setAttribute("rx",WidthOfArrow.MinuteArrow);
-    MinuteArrow.setAttribute("ry",WidthOfArrow.MinuteArrow);
-    HourArrow.setAttribute("rx",WidthOfArrow.HourArrow);
-    HourArrow.setAttribute("ry",WidthOfArrow.HourArrow);
+
+    document.querySelector("body").appendChild(clock);
+    clock.appendChild(TextClock);
 
 
-    svg.appendChild(clock);
-    svg.appendChild(TextClock);
+    for (var j=0;j<Arrows.length;j++){
+        clock.appendChild(Arrows[j]);
+        Arrows[j].style.background=ColorOfArrows;
+        Arrows[j].style.position="absolute";
+        Arrows[j].style.top=clock.offsetHeight/2 -ArrowsTransformOrigin +"px";
+        Arrows[j].style.left=clock.offsetWidth/2 -Arrows[j].offsetWidth/2 +"px";
+        Arrows[j].style.zIndex="10";
+        Arrows[j].style.opacity=ArrowsOpacity;
+        Arrows[j].style.borderRadius=Arrows[j].style.height;
+        Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "px";
+
+
+    }
 
 
 
     for (var  i=num;i>0; i--){
-
-        var hour=document.createElementNS("http://www.w3.org/2000/svg",'circle');
-        var text=document.createElementNS("http://www.w3.org/2000/svg",'text');
-
-
-        text.appendChild(document.createTextNode(i));
-
+        var hour = document.createElement("span");
+        hour.appendChild(document.createTextNode(i));
         var f = 2 / num * i * Math.PI;
-        var left = wrap + radius * Math.sin(f) ;
-        var top = wrap - radius * Math.cos(f) ;
+        var left = wrap + radius * Math.sin(f) + 'px';
+        var top = wrap - radius * Math.cos(f) + 'px';
+        hour.style.position="absolute";
         hour.style.top=top;
         hour.style.left=left;
-
-        hour.setAttribute( "cx", left + RadiusOfHour/2);
-        hour.setAttribute( "cy", top + RadiusOfHour/2 );
-        hour.setAttribute( "r", RadiusOfHour/2 );
-        hour.setAttribute( "stroke", ColorOfHour );
-        hour.setAttribute( "fill", ColorOfHour );
-        text.setAttribute("textLength",TextLenHour);
-        text.setAttribute("lengthAdjust","spacing");
-        if (i>9){ //костыль на варавнивание текста :)
-
-            text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2-2);
-            text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
-        } else {
-            text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2+1);
-            text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
-        }
         Updateclock();
-
-        svg.appendChild(hour);
-        svg.appendChild(text);
-
+        clock.appendChild(hour);
     }
-
-    for (var j=0;j<Arrows.length;j++){
-        svg.appendChild(Arrows[j]);
-        Arrows[j].setAttribute( "x", ClockRadius/2 - Arrows[j].getBBox().width/2 );
-        Arrows[j].setAttribute( "y", ClockRadius/2 -ArrowsTransformOrigin );
-        Arrows[j].setAttribute( "fill", ColorOfArrows );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
-        Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "%";
-    }
-
-
-
 
     function FormatDateTime(DT)
     {
@@ -143,13 +112,9 @@ function AddClock() {
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
         var NowTime=FormatDateTime(CurrTime);
         TextClock.innerHTML=NowTime;
-        TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
-        TextClock.setAttribute('y',ClockRadius/3);
     }
 
     setInterval(Updateclock,1000);
     document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;"
-    document.head.querySelector("style").innerHTML="body > svg > text{font-weight: 600 ;  font-family: Arial;}";
-
-
+    document.head.querySelector("style").innerHTML="span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}";
 }
