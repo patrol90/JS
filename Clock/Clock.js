@@ -13,71 +13,72 @@ function AddClock() {
     var radius = 90; // Радиус нашего круга
     var ColorOfArrows="black";
     var ColorOfHour="#48b382";
-    var RadiusOfHour="30px";
+    var RadiusOfHour="30";
+    var HeightOfFontHour="16";
     var ArrowsTransformOrigin="7";
     var WidthOfArrow={HourArrow:"10",MinuteArrow:"7",SecondArrow:"3"};
     var HeightOfArrow={HourArrow:"70",MinuteArrow:"90",SecondArrow:"100"};
-    var SecondToAngle=360/60;
-    var MinuteToAngle=6;
-    var HourToAngle=360/12;
+    var SecondToAngle=6*Math.PI/180;
+    var MinuteToAngle=1/10*Math.PI/180;
+    var HourToAngle=1/120*Math.PI/180;
     var StartAngle=180;
     var ArrowsOpacity="0.9";
-    var HourArrow=document.createElement("div");
-    var MinuteArrow=document.createElement("div");
-    var SecondArrow=document.createElement("div");
-    var TextClock=document.createElement("div");
+    var BodyArea=document.querySelector("body");
     var CurrTime= new Date;
 
-    
-    
-    var clock=document.createElement("div");
+    var BackgroundArea=document.createElement('canvas');
+    BackgroundArea.setAttribute("width",ClockRadius);
+    BackgroundArea.setAttribute("height",ClockRadius);
 
-    clock.setAttribute( "id", "clock" );
-    clock.style.cssText="width:"+ClockRadius+"px;height:"+ClockRadius+"px;border-radius:"+ClockRadius+"px;background:"+ClockBackground+";position:absolute;";
-    TextClock.style.marginTop="4em";
-    TextClock.style.textAlign="center";
-    TextClock.style.font="16px sans-serif";
-    
-    HourArrow.style.width=WidthOfArrow.HourArrow + "px";
-    HourArrow.style.height=HeightOfArrow.HourArrow + "px";
-    MinuteArrow.style.width=WidthOfArrow.MinuteArrow + "px";
-    MinuteArrow.style.height=HeightOfArrow.MinuteArrow + "px";
-    SecondArrow.style.width=WidthOfArrow.SecondArrow + "px";
-    SecondArrow.style.height=HeightOfArrow.SecondArrow + "px";
-    var Arrows=[HourArrow,MinuteArrow,SecondArrow];
+    var Area=document.createElement('canvas');
+    Area.setAttribute("width",ClockRadius);
+    Area.setAttribute("height",ClockRadius);
+    Area.style.position="absolute";
+    Area.style.left="0px";
+    Area.style.zIndex="10";
+    Area.id='area';
 
-    document.querySelector("body").appendChild(clock);
-    clock.appendChild(TextClock);
+    BodyArea.appendChild(BackgroundArea);
+    BodyArea.appendChild(Area);
 
+    var Context = BackgroundArea.getContext('2d');
+    Context.fillStyle=ClockBackground;
+    Context.beginPath();
+    Context.arc(ClockRadius/2,ClockRadius/2, ClockRadius/2, 0,Math.PI*2, false);
+    Context.fill();
 
-    for (var j=0;j<Arrows.length;j++){
-        clock.appendChild(Arrows[j]);
-        Arrows[j].style.background=ColorOfArrows;
-        Arrows[j].style.position="absolute";
-        Arrows[j].style.top=clock.offsetHeight/2 -ArrowsTransformOrigin +"px";
-        Arrows[j].style.left=clock.offsetWidth/2 -Arrows[j].offsetWidth/2 +"px";
-        Arrows[j].style.zIndex="10";
-        Arrows[j].style.opacity=ArrowsOpacity;
-        Arrows[j].style.borderRadius=Arrows[j].style.height;
-        Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "px";
-
-
-    }
+    var Context2 = Area.getContext('2d');
 
 
 
     for (var  i=num;i>0; i--){
-        var hour = document.createElement("span");
-        hour.appendChild(document.createTextNode(i));
+
         var f = 2 / num * i * Math.PI;
-        var left = wrap + radius * Math.sin(f) + 'px';
-        var top = wrap - radius * Math.cos(f) + 'px';
-        hour.style.position="absolute";
-        hour.style.top=top;
-        hour.style.left=left;
-        Updateclock();
-        clock.appendChild(hour);
+        var left = wrap + radius * Math.sin(f)  ;
+        var top = wrap - radius * Math.cos(f) ;
+
+        var Hour=document.createElement('canvas');
+        Hour.setAttribute("width",RadiusOfHour);
+        Hour.setAttribute("height",RadiusOfHour);
+        Hour.style.position="absolute";
+        Hour.style.left=left+"px";
+        Hour.style.top=top+"px";
+        var Context = Hour.getContext('2d');
+        Context.fillStyle=ColorOfHour;
+        Context.beginPath();
+        Context.arc(RadiusOfHour/2,RadiusOfHour/2, RadiusOfHour/2, 0,Math.PI*2, false);
+        Context.fill();
+        Context.fillStyle='black';
+        Context.font='italic bold '+HeightOfFontHour+'px Arial';
+        Context.textAlign="center";
+        Context.textBaseline='middle';
+        Context.fillText(i,RadiusOfHour/2,RadiusOfHour/2);
+        Context.strokeStyle='red';
+        Context.lineWidth=20;
+        document.querySelector("body").appendChild(Hour);
+
     }
+
 
     function FormatDateTime(DT)
     {
@@ -87,7 +88,6 @@ function AddClock() {
         return  Str0L(Hours,2) + ':' + Str0L(Minutes,2) + ':' + Str0L(Seconds,2);
     }
 
-    // дополняет строку Val слева нулями до длины Len
     function Str0L(Val,Len)
     {
         var StrVal=Val.toString();
@@ -100,21 +100,45 @@ function AddClock() {
 
 
     function Updateclock() {
+
+        var Context=Area.getContext('2d');
         var CurrTime=new Date();
         var H =CurrTime.getHours();
         var M =CurrTime.getMinutes();
         var S=CurrTime.getSeconds();
-        var HAngle=H*HourToAngle-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
-        HourArrow.style.transform="rotate("+HAngle+"deg)";
-        var MAngle=M*MinuteToAngle-StartAngle;
-        MinuteArrow.style.transform="rotate("+MAngle+"deg)";
-        var SAngle=S*SecondToAngle-StartAngle;
-        SecondArrow.style.transform="rotate("+SAngle+"deg)";
-        var NowTime=FormatDateTime(CurrTime);
-        TextClock.innerHTML=NowTime;
+        var HAngle=H*3600*HourToAngle+M*60*HourToAngle;//-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+        var MAngle=M*60*MinuteToAngle;//-StartAngle;
+        var SAngle=S*SecondToAngle;//-StartAngle;
+
+        console.log(HAngle +' '+ MAngle +' '+SAngle );
+        Context2.clearRect (0, 0, ClockRadius, ClockRadius);
+
+        line(HAngle,HeightOfArrow.HourArrow,WidthOfArrow.HourArrow);
+        line(MAngle,HeightOfArrow.MinuteArrow,WidthOfArrow.MinuteArrow);
+        line(SAngle,HeightOfArrow.SecondArrow,WidthOfArrow.SecondArrow);
+
+        Context2.textAlign='center';
+        Context2.textBaseline='middle';
+
+        Context2.font='italic bold '+HeightOfFontHour+'px Arial';
+        Context2.fillText(FormatDateTime(CurrTime),ClockRadius/2,70);
+        requestAnimationFrame(Updateclock);
+
     }
 
-    setInterval(Updateclock,1000);
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;"
+    function line(pos,r,w){
+        Context2.lineWidth=w||1;
+        Context2.lineCap='round';
+        Context2.beginPath();
+        Context2.moveTo(ClockRadius/2,ClockRadius/2);
+        Context2.lineTo(ClockRadius/2+r*Math.cos(pos-Math.PI/2),
+            ClockRadius/2+r*Math.sin(pos-Math.PI/2));
+        Context2.stroke();
+        Context2.closePath();
+    }
+    Updateclock();
+
+
+    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;";
     document.head.querySelector("style").innerHTML="span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}";
 }

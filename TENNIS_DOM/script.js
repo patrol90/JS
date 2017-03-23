@@ -87,12 +87,12 @@ var BallH=
             switch (PressedChar){
                 case 16:
                     EO.preventDefault();
-                        AreaH.BlockLeft.SpeedY-=AreaH.BlockLeft.AccelY;
+                        AreaH.BlockLeft.SpeedY=-AreaH.BlockLeft.AccelY;
                     break;
 
                 case 17:
                     EO.preventDefault();
-                        AreaH.BlockLeft.SpeedY+=AreaH.BlockLeft.AccelY;
+                        AreaH.BlockLeft.SpeedY=AreaH.BlockLeft.AccelY;
                     break;
             }
         }
@@ -120,12 +120,12 @@ var BallH=
             switch (PressedChar){
                 case 38:
                     EO.preventDefault();
-                        AreaH.BlockRight.SpeedY-=AreaH.BlockRight.AccelY;
+                        AreaH.BlockRight.SpeedY=-AreaH.BlockRight.AccelY;
                     break;
 
                 case 40:
                     EO.preventDefault();
-                        AreaH.BlockRight.SpeedY+=AreaH.BlockRight.AccelY;
+                        AreaH.BlockRight.SpeedY=AreaH.BlockRight.AccelY;
                     break;
             }
         }
