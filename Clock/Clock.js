@@ -22,7 +22,7 @@ function AddClock() {
     var MinuteToAngle=1/10*Math.PI/180;
     var HourToAngle=1/120*Math.PI/180;
     var StartAngle=180;
-    var ArrowsOpacity="0.9";
+    var ArrowsOpacity="0.85";
     var BodyArea=document.querySelector("body");
     var CurrTime= new Date;
 
@@ -130,6 +130,7 @@ function AddClock() {
         Context2.lineWidth=w||1;
         Context2.lineCap='round';
         Context2.beginPath();
+        Context2.globalAlpha=ArrowsOpacity;
         Context2.moveTo(ClockRadius/2,ClockRadius/2);
         Context2.lineTo(ClockRadius/2+r*Math.cos(pos-Math.PI/2),
             ClockRadius/2+r*Math.sin(pos-Math.PI/2));
