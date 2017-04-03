@@ -61,101 +61,18 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="info_block">
 
-    </div>
-     <button class="myButton" id="create">ввод информации о напитке</button>
-     <button  class="myButton" id="show">получение информации о напитке</button>
-     <button  class="myButton" id="delete">удаление информации о напитке</button>
-     <button  class="myButton" id="show_all">перечень всех напитков</button>
-
-
-  </div>
-  <script src="HashStorage.js"></script>
+     <script src="LocalStorage.js"></script>
 
   <script>
   "use strict";
-  var DrinkStorage =new THashStorage();
+  var DrinkStorage =new TLocalStorage("DRINKS");
+  DrinkStorage.CreateButtons();
+  CreateControllersForDrink(DrinkStorage);
 
-
-  function AddName(){
-    var NameNapitok='';
-    while (NameNapitok.length==0) {
-      NameNapitok = prompt("Введите название напитка");
-    }
-    return NameNapitok;
-  };
-
-
-  function AddInfo()  {
-
-    var NapitokInfo={};
-    if(confirm("Напиток алкогольный?")) {
-      var AlkoBool= "да"
-    }else {
-      var AlkoBool = "нет"};
-    var NapitokRecept=prompt("Введите рецепт напитка: ");
-    NapitokInfo["Алкогольный"]=AlkoBool;
-    NapitokInfo["Рецепт"]=NapitokRecept;
-    return NapitokInfo;
-  }
-
-  function ReturnAlko(alko){
-
-    alko?alert(Rekurs(alko)):alert("Такое название элемента отсутствует");
-
-
-    function Rekurs(ob) {
-      var desc="";
-
-      if (typeof ob == "object") {
-        for (var key in ob) {
-
-          if (typeof ob[key] == "object") {//если значение ключа - обьект то вызываем рекурсивную функцию
-            Rekurs(ob[key]);
-
-          } else {
-            desc+= key+': '+ob[key]+'\n';
-          }
-        }
-
-      } else {
-        desc+=ob;
-      }
-
-      return desc;
-
-    }
-
-  }
-
-
-
-  (function() {
-    document.getElementById('create').onclick = function(){
-      DrinkStorage.AddValue(AddName(),AddInfo());
-    };
-    document.getElementById('show').onclick = function(){
-      ReturnAlko(DrinkStorage.GetValue(AddName()));
-    };
-    document.getElementById('delete').onclick = function(){
-      if(DrinkStorage.DeleteValue(AddName())){
-        alert ("Элемент удален");
-      }else {
-        alert("Такой элемент не найден")
-      }
-    };
-    document.getElementById('show_all').onclick = function(){
-      if (DrinkStorage.GetKeys().length!=0){
-        alert(DrinkStorage.GetKeys());
-      } else {
-        alert("Нет элементов");
-      }
-    };
-  })();
-
-
+  var FoodStrorage =new TLocalStorage("FOOD");
+  FoodStrorage.CreateButtons();
+  CreateControllersForFood(FoodStrorage);
   </script>
 
 </body>
