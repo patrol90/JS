@@ -62,16 +62,17 @@
 </head>
 <body>
 
+     <script src="scripts.js"></script>
      <script src="LocalStorage.js"></script>
 
   <script>
   "use strict";
   var DrinkStorage =new TLocalStorage("DRINKS");
-  DrinkStorage.CreateButtons();
+  CreateButtons(DrinkStorage);
   CreateControllersForDrink(DrinkStorage);
 
   var FoodStrorage =new TLocalStorage("FOOD");
-  FoodStrorage.CreateButtons();
+  CreateButtons(FoodStrorage);
   CreateControllersForFood(FoodStrorage);
   </script>
 
