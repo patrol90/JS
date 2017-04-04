@@ -9,7 +9,6 @@ function TLocalStorage (name)
 {
     var self=this;
     self.name=name;
-    self.buttons=[{name:"create",func:"AddValue",text:"ввод информации об элементе"},{name:"show",func:"Rekurs",text:"получение информации о элементе"},{name:"delete",func:"DeleteValue",text:"удаление информации о элементе"},{name:"show_all",func:"GetKeys",text:"перечень всех элементов"}];
     self.storage={};
 
     self.SaveLocalStorage=function (obj) {
@@ -19,8 +18,9 @@ function TLocalStorage (name)
     self.LoadLocalStorage=function () {
         var obj=JSON.parse(localStorage.getItem(self.name));
         return obj;
+
     };
-    if(self.LoadLocalStorage()){
+    if(localStorage[self.name]){
         self.storage=self.LoadLocalStorage();
     }
 
@@ -56,7 +56,7 @@ function TLocalStorage (name)
 
     };
 
-};
+}
 
 
 

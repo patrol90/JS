@@ -1,6 +1,7 @@
 /**
  * Created by dmitry.sobolevsky on 04.04.2017.
  */
+"use strict";
 function Rekurs(ob){
     var desc="";
 
@@ -41,16 +42,17 @@ function AddInfo (name1,text1,name2,text2) {
 
 
 function CreateButtons(object) {
+    var buttons=[{name:"create",text:"ввод информации об элементе"},{name:"show",text:"получение информации о элементе"},{name:"delete",text:"удаление информации о элементе"},{name:"show_all",text:"перечень всех элементов"}];
     var container=document.createElement("div");
     container.classList.add("container");
     var h1Text=document.createTextNode(object.name);
     container.appendChild(h1Text);
 
-    for(var i=0;i<object.buttons.length;i++){
+    for(var i=0;i<buttons.length;i++){
         var button= document.createElement("button");
-        button.id=object.name+'-'+object.buttons[i].name;
+        button.id=object.name+'-'+buttons[i].name;
         button.classList.add("myButton");
-        button.appendChild(document.createTextNode(object.buttons[i].text));
+        button.appendChild(document.createTextNode(buttons[i].text));
         container.appendChild(button);
     }
     document.querySelector('body').appendChild(container);
