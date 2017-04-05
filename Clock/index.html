@@ -4,22 +4,28 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
-    body{
+    body
+    {
       margin: 0;
       padding:0;
     }
+
   </style>
 </head>
-<body>
+<body style="display: inline-block;">
+
 <script src="TClock.js"></script>
 <script src="TClockViewCanvas.js"></script>
 <script src="TClockViewDOM.js"></script>
 <script src="TClockViewSVG.js"></script>
 <script>
-  var Test=new TClock();
-  Test.Start();
   var ClockHtml=new TClockViewDOM("Нью-Йорк (GMT-5)",-5);
   var ClockHtml2=new TClockViewDOM("Минск (GMT+3)",3);
+  var Canvas1=new TClockViewCanvas("Лондон (GMT)",0);
+  var Canvas2=new TClockViewCanvas("Лондон2 (GMT)",1);
+  var ClockSvg1=new TClockViewSVG("Лондон2 (GMT)",1);
+  var ClockSvg2=new TClockViewSVG("Лондон2 (GMT)",5);
 </script>
+
 </body>
 </html>

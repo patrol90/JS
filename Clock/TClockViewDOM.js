@@ -47,7 +47,6 @@ function TClockViewDOM (name,gmt) {
     container.style.width=ClockRadius*1.2+"px";
 
     var clock=document.createElement("div");
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;";
     document.head.querySelector("style").innerHTML="#clock span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}";
 
     var ButtonStart= document.createElement("button");

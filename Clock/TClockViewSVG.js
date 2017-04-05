@@ -4,7 +4,10 @@
 "use strict";
 
 
-function TClockViewSVG () {
+function TClockViewSVG (name,gmt) {
+    TClock.call(this);
+    var self=this;
+    self.SetGMT(gmt);
 
     var ClockRadius=230;
     var ClockBackground="#fcca66";
@@ -27,10 +30,12 @@ function TClockViewSVG () {
     var MinuteArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var SecondArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var TextClock=document.createElementNS("http://www.w3.org/2000/svg",'text');
-    var CurrTime= new Date;
+    var SvgTag = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    SvgTag.setAttribute('width',ClockRadius*1.2);
+    SvgTag.setAttribute('height',ClockRadius*1.2);
+    SvgTag.classList.add('container');
+    document.querySelector('body').appendChild(SvgTag);
 
-
-    var svg=document.getElementsByTagName('svg')[0];
     var clock=document.createElementNS("http://www.w3.org/2000/svg",'circle');
 
     clock.setAttribute( "id", "clock" );
@@ -56,8 +61,8 @@ function TClockViewSVG () {
     HourArrow.setAttribute("ry",WidthOfArrow.HourArrow);
 
 
-    svg.appendChild(clock);
-    svg.appendChild(TextClock);
+    SvgTag.appendChild(clock);
+    SvgTag.appendChild(TextClock);
 
 
 
@@ -92,13 +97,13 @@ function TClockViewSVG () {
         }
         Updateclock();
 
-        svg.appendChild(hour);
-        svg.appendChild(text);
+        SvgTag.appendChild(hour);
+        SvgTag.appendChild(text);
 
     }
 
     for (var j=0;j<Arrows.length;j++){
-        svg.appendChild(Arrows[j]);
+        SvgTag.appendChild(Arrows[j]);
         Arrows[j].setAttribute( "x", ClockRadius/2 - Arrows[j].getBBox().width/2 );
         Arrows[j].setAttribute( "y", ClockRadius/2 -ArrowsTransformOrigin );
         Arrows[j].setAttribute( "fill", ColorOfArrows );
@@ -108,15 +113,6 @@ function TClockViewSVG () {
     }
 
 
-
-
-    function FormatDateTime(DT)
-    {
-        var Hours=DT.getHours();
-        var Minutes=DT.getMinutes();
-        var Seconds=DT.getSeconds();
-        return  Str0L(Hours,2) + ':' + Str0L(Minutes,2) + ':' + Str0L(Seconds,2);
-    }
 
     // дополняет строку Val слева нулями до длины Len
     function Str0L(Val,Len)
@@ -131,25 +127,22 @@ function TClockViewSVG () {
 
 
     function Updateclock() {
-        var CurrTime=new Date();
-        var H =CurrTime.getHours();
-        var M =CurrTime.getMinutes();
-        var S=CurrTime.getSeconds();
-        var HAngle=H*HourToAngle-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+    
+        var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
         HourArrow.style.transform="rotate("+HAngle+"deg)";
-        var MAngle=M*MinuteToAngle-StartAngle;
+        var MAngle=self.Minutes*MinuteToAngle-StartAngle;
         MinuteArrow.style.transform="rotate("+MAngle+"deg)";
-        var SAngle=S*SecondToAngle-StartAngle;
+        var SAngle=self.Seconds*SecondToAngle-StartAngle;
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
-        var NowTime=FormatDateTime(CurrTime);
+        var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
         TextClock.innerHTML=NowTime;
         TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
         TextClock.setAttribute('y',ClockRadius/3);
     }
 
     setInterval(Updateclock,1000);
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;"
-    document.head.querySelector("style").innerHTML="body > svg > text{font-weight: 600 ;  font-family: Arial;}";
 
 
 }
+TClockViewSVG.prototype = Object.create(TClock.prototype);
+TClockViewSVG.prototype.constructor=TClockViewSVG; // рекомендуется
