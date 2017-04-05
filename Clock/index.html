@@ -11,7 +11,15 @@
   </style>
 </head>
 <body>
-<script src="Clock.js"></script>
-
+<script src="TClock.js"></script>
+<script src="TClockViewCanvas.js"></script>
+<script src="TClockViewDOM.js"></script>
+<script src="TClockViewSVG.js"></script>
+<script>
+  var Test=new TClock();
+  Test.Start();
+  var ClockHtml=new TClockViewDOM("Нью-Йорк (GMT-5)",-5);
+  var ClockHtml2=new TClockViewDOM("Минск (GMT+3)",3);
+</script>
 </body>
 </html>

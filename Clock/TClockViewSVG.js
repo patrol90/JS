@@ -2,9 +2,9 @@
  * Created by dmitry.sobolevsky on 09.03.2017.
  */
 "use strict";
-document.addEventListener("DOMContentLoaded",AddClock);
 
-function AddClock() {
+
+function TClockViewSVG () {
 
     var ClockRadius=230;
     var ClockBackground="#fcca66";

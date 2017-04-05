@@ -2,9 +2,8 @@
  * Created by dmitry.sobolevsky on 09.03.2017.
  */
 "use strict";
-document.addEventListener("DOMContentLoaded",AddClock);
 
-function AddClock() {
+function TClockViewCanvas  () {
 
     var ClockRadius=230;
     var ClockBackground="#fcca66";
@@ -110,7 +109,7 @@ function AddClock() {
         var MAngle=M*60*MinuteToAngle;//-StartAngle;
         var SAngle=S*SecondToAngle;//-StartAngle;
 
-        console.log(HAngle +' '+ MAngle +' '+SAngle );
+       // console.log(HAngle +' '+ MAngle +' '+SAngle );
         Context2.clearRect (0, 0, ClockRadius, ClockRadius);
 
         line(HAngle,HeightOfArrow.HourArrow,WidthOfArrow.HourArrow);
