@@ -98,6 +98,8 @@ function TClockViewDOM (name,gmt) {
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
         var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
         TextClock.innerHTML=NowTime;
+        requestAnimationFrame(UpdateClock);
+
     };
 
     for (var  i=num;i>0; i--){
@@ -123,8 +125,7 @@ function TClockViewDOM (name,gmt) {
         return StrVal;
     }
 
-
-    setInterval(UpdateClock,500);
+    UpdateClock();
   }
 TClockViewDOM.prototype = Object.create(TClock.prototype);
 TClockViewDOM.prototype.constructor=TClockViewDOM; // рекомендуется

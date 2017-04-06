@@ -157,9 +157,10 @@ function TClockViewSVG (name,gmt) {
         TextClock.innerHTML=NowTime;
         TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
         TextClock.setAttribute('y',ClockRadius/3);
-    };
+        requestAnimationFrame(UpdateClock);
 
-    setInterval(UpdateClock,500);
+    };
+    UpdateClock();
 
 
 }

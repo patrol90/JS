@@ -124,6 +124,7 @@ function TClockViewCanvas  (name,gmt) {
 
         Context2.font='bold '+HeightOfFontHour+'px Arial';
         Context2.fillText(Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2),ClockRadius/2,70);
+        requestAnimationFrame(UpdateClock);
 
     };
 
@@ -138,8 +139,7 @@ function TClockViewCanvas  (name,gmt) {
         Context2.stroke();
         Context2.closePath();
     }
-    setInterval(UpdateClock,500);
-
+    UpdateClock();
 
     document.querySelector("body").style.cssText="border:0px;padding:0px;max-width:900px;margin:1em auto;";
     document.querySelector("body").appendChild(BodyArea);
