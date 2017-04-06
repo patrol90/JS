@@ -41,9 +41,10 @@ function TClockViewCanvas  (name,gmt) {
     ButtonStop.appendChild(document.createTextNode("стоп"));
     ButtonStart.addEventListener('click',self.Start,false);
     ButtonStop.addEventListener('click',self.Stop,false);
-    BodyArea.appendChild(NameOfContainer);
     BodyArea.appendChild(ButtonStart);
     BodyArea.appendChild(ButtonStop);
+    BodyArea.appendChild(NameOfContainer);
+
 
 
     var BackgroundArea=document.createElement('canvas');
@@ -77,25 +78,24 @@ function TClockViewCanvas  (name,gmt) {
         var left = wrap + radius * Math.sin(f)  ;
         var top = wrap - radius * Math.cos(f) ;
 
-        var Hour=document.createElement('canvas');
+        /*var Hour=document.createElement('canvas');
         Hour.setAttribute("width",RadiusOfHour);
         Hour.setAttribute("height",RadiusOfHour);
         Hour.style.position="absolute";
         Hour.style.left=left+"px";
         Hour.style.top=top+30+"px";
-        var Context = Hour.getContext('2d');
+        var Context = Hour.getContext('2d');*/
         Context.fillStyle=ColorOfHour;
         Context.beginPath();
-        Context.arc(RadiusOfHour/2,RadiusOfHour/2, RadiusOfHour/2, 0,Math.PI*2, false);
+        Context.arc(left+RadiusOfHour/2,top+RadiusOfHour/2, RadiusOfHour/2, 0,Math.PI*2, false);
         Context.fill();
         Context.fillStyle='black';
-        Context.font='italic bold '+HeightOfFontHour+'px Arial';
+        Context.font='bold '+HeightOfFontHour+'px Arial';
         Context.textAlign="center";
         Context.textBaseline='middle';
-        Context.fillText(i,RadiusOfHour/2,RadiusOfHour/2);
+        Context.fillText(i,left+RadiusOfHour/2,top+RadiusOfHour/2);
         Context.strokeStyle='red';
         Context.lineWidth=20;
-        BodyArea.appendChild(Hour);
 
     }
 
@@ -127,8 +127,9 @@ function TClockViewCanvas  (name,gmt) {
 
         Context2.textAlign='center';
         Context2.textBaseline='middle';
+        Context2.fillStyle = 'black';
 
-        Context2.font='italic bold '+HeightOfFontHour+'px Arial';
+        Context2.font='bold '+HeightOfFontHour+'px Arial';
         Context2.fillText(Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2),ClockRadius/2,70);
         requestAnimationFrame(self.UpdateClock);
 
@@ -138,7 +139,7 @@ function TClockViewCanvas  (name,gmt) {
         Context2.lineWidth=w||1;
         Context2.lineCap='round';
         Context2.beginPath();
-        Context2.globalAlpha=ArrowsOpacity;
+        //Context2.globalAlpha=ArrowsOpacity;
         Context2.moveTo(ClockRadius/2,ClockRadius/2);
         Context2.lineTo(ClockRadius/2+r*Math.cos(pos-Math.PI/2),
             ClockRadius/2+r*Math.sin(pos-Math.PI/2));
@@ -148,7 +149,7 @@ function TClockViewCanvas  (name,gmt) {
     self.UpdateClock();
 
 
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;display:flex;";
+    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;max-width:900px";
     document.querySelector("body").appendChild(BodyArea);
 }
 TClockViewCanvas.prototype = Object.create(TClock.prototype);

@@ -47,7 +47,7 @@ function TClockViewDOM (name,gmt) {
     container.style.width=ClockRadius*1.2+"px";
 
     var clock=document.createElement("div");
-    document.head.querySelector("style").innerHTML="#clock span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}";
+    document.head.querySelector("style").innerHTML="#clock span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}.container{float:left;}*{font-family:Arial;font-weight:600;}.container>span {font-weight:100;font-size:13px}";
 
     var ButtonStart= document.createElement("button");
     var ButtonStop= document.createElement("button");
@@ -124,7 +124,7 @@ function TClockViewDOM (name,gmt) {
         return StrVal;
     }
 
-    setInterval(self.UpdateClock,1000);
+    setInterval(self.UpdateClock,500);
   }
 TClockViewDOM.prototype = Object.create(TClock.prototype);
 TClockViewDOM.prototype.constructor=TClockViewDOM; // рекомендуется

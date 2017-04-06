@@ -4,11 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
-    body
-    {
-      margin: 0;
-      padding:0;
-    }
+
 
   </style>
 </head>
@@ -21,10 +17,16 @@
 <script>
   var ClockHtml=new TClockViewDOM("Нью-Йорк (GMT-5)",-5);
   var ClockHtml2=new TClockViewDOM("Минск (GMT+3)",3);
-  var Canvas1=new TClockViewCanvas("Лондон (GMT)",0);
-  var Canvas2=new TClockViewCanvas("Лондон2 (GMT)",1);
-  var ClockSvg1=new TClockViewSVG("Лондон2 (GMT)",1);
-  var ClockSvg2=new TClockViewSVG("Лондон2 (GMT)",5);
+  var ClockCanvas1=new TClockViewCanvas("Лондон (GMT)",0);
+  var ClockCanvas2=new TClockViewCanvas("Токио (GMT+9)",9);
+  var ClockSvg1=new TClockViewSVG("Берлин (GMT+1)",1);
+  var ClockSvg2=new TClockViewSVG("Владивосток (GMT+10)",10);
+  ClockHtml.Start(); 
+  ClockHtml2.Start();
+  ClockCanvas1.Start();
+  ClockCanvas2.Start();
+  ClockSvg1.Start();
+  ClockSvg2.Start();
 </script>
 
 </body>

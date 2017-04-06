@@ -31,10 +31,31 @@ function TClockViewSVG (name,gmt) {
     var SecondArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var TextClock=document.createElementNS("http://www.w3.org/2000/svg",'text');
     var SvgTag = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    SvgTag.setAttribute('width',ClockRadius*1.2);
-    SvgTag.setAttribute('height',ClockRadius*1.2);
-    SvgTag.classList.add('container');
-    document.querySelector('body').appendChild(SvgTag);
+    SvgTag.setAttribute('width',ClockRadius);
+    SvgTag.setAttribute('height',ClockRadius);
+
+
+    var container=document.createElement("div");
+    container.classList.add('container');
+    container.style.width=ClockRadius*1.2+"px";
+    container.style.height=ClockRadius*1.2+"px";
+    container.appendChild(SvgTag);
+
+    var ButtonStart= document.createElement("button");
+    var ButtonStop= document.createElement("button");
+    var NameOfContainer=document.createElement("span");
+    NameOfContainer.appendChild(document.createTextNode(name));
+    ButtonStart.style.margin="0 5px 10px 5px";
+    ButtonStop.style.margin="0 5px 10px 5px";
+    ButtonStart.appendChild(document.createTextNode("старт"));
+    ButtonStop.appendChild(document.createTextNode("стоп"));
+    ButtonStart.addEventListener('click',self.Start,false);
+    ButtonStop.addEventListener('click',self.Stop,false);
+    container.insertBefore(ButtonStart,SvgTag);
+    container.insertBefore(ButtonStop,SvgTag);
+    container.insertBefore(NameOfContainer,SvgTag);
+
+    document.querySelector('body').appendChild(container);
 
     var clock=document.createElementNS("http://www.w3.org/2000/svg",'circle');
 
@@ -53,12 +74,12 @@ function TClockViewSVG (name,gmt) {
     MinuteArrow.setAttribute("height",HeightOfArrow.MinuteArrow);
     SecondArrow.setAttribute("width",WidthOfArrow.SecondArrow);
     SecondArrow.setAttribute("height",HeightOfArrow.SecondArrow);
-    SecondArrow.setAttribute("rx",WidthOfArrow.SecondArrow);
-    SecondArrow.setAttribute("ry",WidthOfArrow.SecondArrow);
-    MinuteArrow.setAttribute("rx",WidthOfArrow.MinuteArrow);
-    MinuteArrow.setAttribute("ry",WidthOfArrow.MinuteArrow);
-    HourArrow.setAttribute("rx",WidthOfArrow.HourArrow);
-    HourArrow.setAttribute("ry",WidthOfArrow.HourArrow);
+    SecondArrow.setAttribute("rx",WidthOfArrow.SecondArrow/2);
+    SecondArrow.setAttribute("ry",WidthOfArrow.SecondArrow/2);
+    MinuteArrow.setAttribute("rx",WidthOfArrow.MinuteArrow/2);
+    MinuteArrow.setAttribute("ry",WidthOfArrow.MinuteArrow/2);
+    HourArrow.setAttribute("rx",WidthOfArrow.HourArrow/2);
+    HourArrow.setAttribute("ry",WidthOfArrow.HourArrow/2);
 
 
     SvgTag.appendChild(clock);
@@ -95,7 +116,7 @@ function TClockViewSVG (name,gmt) {
             text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2+1);
             text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
         }
-        Updateclock();
+        UpdateClock();
 
         SvgTag.appendChild(hour);
         SvgTag.appendChild(text);
@@ -107,8 +128,7 @@ function TClockViewSVG (name,gmt) {
         Arrows[j].setAttribute( "x", ClockRadius/2 - Arrows[j].getBBox().width/2 );
         Arrows[j].setAttribute( "y", ClockRadius/2 -ArrowsTransformOrigin );
         Arrows[j].setAttribute( "fill", ColorOfArrows );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
+        //Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
         Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "%";
     }
 
@@ -126,8 +146,8 @@ function TClockViewSVG (name,gmt) {
 
 
 
-    function Updateclock() {
-    
+    function UpdateClock() {
+
         var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
         HourArrow.style.transform="rotate("+HAngle+"deg)";
         var MAngle=self.Minutes*MinuteToAngle-StartAngle;
@@ -138,9 +158,9 @@ function TClockViewSVG (name,gmt) {
         TextClock.innerHTML=NowTime;
         TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
         TextClock.setAttribute('y',ClockRadius/3);
-    }
+    };
 
-    setInterval(Updateclock,1000);
+    setInterval(UpdateClock,500);
 
 
 }
