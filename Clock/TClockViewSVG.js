@@ -2,10 +2,12 @@
  * Created by dmitry.sobolevsky on 09.03.2017.
  */
 "use strict";
-document.addEventListener("DOMContentLoaded",AddClock);
 
-function AddClock() {
 
+function TClockViewSVG (name,gmt) {
+    TClock.call(this);
+    var self=this;
+    self.SetGMT(gmt);
     var ClockRadius=230;
     var ClockBackground="#fcca66";
     var num = 12; // Число часов
@@ -27,10 +29,33 @@ function AddClock() {
     var MinuteArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var SecondArrow=document.createElementNS("http://www.w3.org/2000/svg",'rect');
     var TextClock=document.createElementNS("http://www.w3.org/2000/svg",'text');
-    var CurrTime= new Date;
+    var SvgTag = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    SvgTag.setAttribute('width',ClockRadius);
+    SvgTag.setAttribute('height',ClockRadius);
 
 
-    var svg=document.getElementsByTagName('svg')[0];
+    var container=document.createElement("div");
+    container.classList.add('container');
+    container.style.width=ClockRadius*1.2+"px";
+    container.style.height=ClockRadius*1.2+"px";
+    container.appendChild(SvgTag);
+
+    var ButtonStart= document.createElement("button");
+    var ButtonStop= document.createElement("button");
+    var NameOfContainer=document.createElement("span");
+    NameOfContainer.appendChild(document.createTextNode(name));
+    ButtonStart.style.margin="0 5px 10px 5px";
+    ButtonStop.style.margin="0 5px 10px 5px";
+    ButtonStart.appendChild(document.createTextNode("старт"));
+    ButtonStop.appendChild(document.createTextNode("стоп"));
+    ButtonStart.addEventListener('click',self.Start,false);
+    ButtonStop.addEventListener('click',self.Stop,false);
+    container.insertBefore(ButtonStart,SvgTag);
+    container.insertBefore(ButtonStop,SvgTag);
+    container.insertBefore(NameOfContainer,SvgTag);
+
+    document.querySelector('body').appendChild(container);
+
     var clock=document.createElementNS("http://www.w3.org/2000/svg",'circle');
 
     clock.setAttribute( "id", "clock" );
@@ -48,16 +73,16 @@ function AddClock() {
     MinuteArrow.setAttribute("height",HeightOfArrow.MinuteArrow);
     SecondArrow.setAttribute("width",WidthOfArrow.SecondArrow);
     SecondArrow.setAttribute("height",HeightOfArrow.SecondArrow);
-    SecondArrow.setAttribute("rx",WidthOfArrow.SecondArrow);
-    SecondArrow.setAttribute("ry",WidthOfArrow.SecondArrow);
-    MinuteArrow.setAttribute("rx",WidthOfArrow.MinuteArrow);
-    MinuteArrow.setAttribute("ry",WidthOfArrow.MinuteArrow);
-    HourArrow.setAttribute("rx",WidthOfArrow.HourArrow);
-    HourArrow.setAttribute("ry",WidthOfArrow.HourArrow);
+    SecondArrow.setAttribute("rx",WidthOfArrow.SecondArrow/2);
+    SecondArrow.setAttribute("ry",WidthOfArrow.SecondArrow/2);
+    MinuteArrow.setAttribute("rx",WidthOfArrow.MinuteArrow/2);
+    MinuteArrow.setAttribute("ry",WidthOfArrow.MinuteArrow/2);
+    HourArrow.setAttribute("rx",WidthOfArrow.HourArrow/2);
+    HourArrow.setAttribute("ry",WidthOfArrow.HourArrow/2);
 
 
-    svg.appendChild(clock);
-    svg.appendChild(TextClock);
+    SvgTag.appendChild(clock);
+    SvgTag.appendChild(TextClock);
 
 
 
@@ -90,33 +115,23 @@ function AddClock() {
             text.setAttribute("x",left + RadiusOfHour/2-TextLenHour/2+1);
             text.setAttribute("y",top + RadiusOfHour/2 +TextLenHour/2 );
         }
-        Updateclock();
+        UpdateClock();
 
-        svg.appendChild(hour);
-        svg.appendChild(text);
+        SvgTag.appendChild(hour);
+        SvgTag.appendChild(text);
 
     }
 
     for (var j=0;j<Arrows.length;j++){
-        svg.appendChild(Arrows[j]);
+        SvgTag.appendChild(Arrows[j]);
         Arrows[j].setAttribute( "x", ClockRadius/2 - Arrows[j].getBBox().width/2 );
         Arrows[j].setAttribute( "y", ClockRadius/2 -ArrowsTransformOrigin );
         Arrows[j].setAttribute( "fill", ColorOfArrows );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
-        Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
+        //Arrows[j].setAttribute( "fill-opacity", ArrowsOpacity );
         Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "%";
     }
 
 
-
-
-    function FormatDateTime(DT)
-    {
-        var Hours=DT.getHours();
-        var Minutes=DT.getMinutes();
-        var Seconds=DT.getSeconds();
-        return  Str0L(Hours,2) + ':' + Str0L(Minutes,2) + ':' + Str0L(Seconds,2);
-    }
 
     // дополняет строку Val слева нулями до длины Len
     function Str0L(Val,Len)
@@ -130,26 +145,24 @@ function AddClock() {
 
 
 
-    function Updateclock() {
-        var CurrTime=new Date();
-        var H =CurrTime.getHours();
-        var M =CurrTime.getMinutes();
-        var S=CurrTime.getSeconds();
-        var HAngle=H*HourToAngle-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+    function UpdateClock() {
+
+        var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
         HourArrow.style.transform="rotate("+HAngle+"deg)";
-        var MAngle=M*MinuteToAngle-StartAngle;
+        var MAngle=self.Minutes*MinuteToAngle-StartAngle;
         MinuteArrow.style.transform="rotate("+MAngle+"deg)";
-        var SAngle=S*SecondToAngle-StartAngle;
+        var SAngle=self.Seconds*SecondToAngle-StartAngle;
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
-        var NowTime=FormatDateTime(CurrTime);
+        var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
         TextClock.innerHTML=NowTime;
         TextClock.setAttribute('x', ClockRadius/2 -TextClock.getBBox().width/2 );
         TextClock.setAttribute('y',ClockRadius/3);
-    }
+        requestAnimationFrame(UpdateClock);
 
-    setInterval(Updateclock,1000);
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;"
-    document.head.querySelector("style").innerHTML="body > svg > text{font-weight: 600 ;  font-family: Arial;}";
+    };
+    UpdateClock();
 
 
 }
+TClockViewSVG.prototype = Object.create(TClock.prototype);
+TClockViewSVG.prototype.constructor=TClockViewSVG; // рекомендуется
