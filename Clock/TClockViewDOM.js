@@ -7,19 +7,8 @@ function TClockViewDOM (name,gmt) {
 
     TClock.call(this);
     var self=this;
-    self.UpdateClock =function () {
-        var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
-        HourArrow.style.transform="rotate("+HAngle+"deg)";
-        var MAngle=self.Minutes*MinuteToAngle-StartAngle;
-        MinuteArrow.style.transform="rotate("+MAngle+"deg)";
-        var SAngle=self.Seconds*SecondToAngle-StartAngle;
-        SecondArrow.style.transform="rotate("+SAngle+"deg)";
-        var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
-        TextClock.innerHTML=NowTime;
-    };
 
     self.SetGMT(gmt);
-
     var ClockRadius=230;
     var ClockBackground="#fcca66";
     var num = 12; // Число часов
@@ -68,7 +57,8 @@ function TClockViewDOM (name,gmt) {
     clock.style.cssText="width:"+ClockRadius+"px;height:"+ClockRadius+"px;border-radius:"+ClockRadius+"px;background:"+ClockBackground+";position:absolute;";
     TextClock.style.marginTop="4em";
     TextClock.style.textAlign="center";
-    TextClock.style.font="16px sans-serif";
+    TextClock.style.font="16px Arial";
+    TextClock.style.fontWeight="600";
 
     HourArrow.style.width=WidthOfArrow.HourArrow + "px";
     HourArrow.style.height=HeightOfArrow.HourArrow + "px";
@@ -99,7 +89,16 @@ function TClockViewDOM (name,gmt) {
         Arrows[j].style.borderRadius=Arrows[j].style.height;
         Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "px";
     }
-
+    var UpdateClock =function () {
+        var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+        HourArrow.style.transform="rotate("+HAngle+"deg)";
+        var MAngle=self.Minutes*MinuteToAngle-StartAngle;
+        MinuteArrow.style.transform="rotate("+MAngle+"deg)";
+        var SAngle=self.Seconds*SecondToAngle-StartAngle;
+        SecondArrow.style.transform="rotate("+SAngle+"deg)";
+        var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
+        TextClock.innerHTML=NowTime;
+    };
 
     for (var  i=num;i>0; i--){
         var hour = document.createElement("span");
@@ -110,7 +109,7 @@ function TClockViewDOM (name,gmt) {
         hour.style.position="absolute";
         hour.style.top=top;
         hour.style.left=left;
-        self.UpdateClock();
+        UpdateClock();
         clock.appendChild(hour);
     }
 
@@ -124,7 +123,8 @@ function TClockViewDOM (name,gmt) {
         return StrVal;
     }
 
-    setInterval(self.UpdateClock,500);
+
+    setInterval(UpdateClock,500);
   }
 TClockViewDOM.prototype = Object.create(TClock.prototype);
 TClockViewDOM.prototype.constructor=TClockViewDOM; // рекомендуется

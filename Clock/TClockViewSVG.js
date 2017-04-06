@@ -8,7 +8,6 @@ function TClockViewSVG (name,gmt) {
     TClock.call(this);
     var self=this;
     self.SetGMT(gmt);
-
     var ClockRadius=230;
     var ClockBackground="#fcca66";
     var num = 12; // Число часов

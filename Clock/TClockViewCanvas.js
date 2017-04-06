@@ -78,13 +78,6 @@ function TClockViewCanvas  (name,gmt) {
         var left = wrap + radius * Math.sin(f)  ;
         var top = wrap - radius * Math.cos(f) ;
 
-        /*var Hour=document.createElement('canvas');
-        Hour.setAttribute("width",RadiusOfHour);
-        Hour.setAttribute("height",RadiusOfHour);
-        Hour.style.position="absolute";
-        Hour.style.left=left+"px";
-        Hour.style.top=top+30+"px";
-        var Context = Hour.getContext('2d');*/
         Context.fillStyle=ColorOfHour;
         Context.beginPath();
         Context.arc(left+RadiusOfHour/2,top+RadiusOfHour/2, RadiusOfHour/2, 0,Math.PI*2, false);
@@ -113,7 +106,7 @@ function TClockViewCanvas  (name,gmt) {
 
 
 
-    self.UpdateClock =function () {
+    var UpdateClock =function () {
 
         var HAngle=self.Hour*3600*HourToAngle+self.Minutes*60*HourToAngle;//-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
         var MAngle=self.Minutes*60*MinuteToAngle;//-StartAngle;
@@ -131,7 +124,6 @@ function TClockViewCanvas  (name,gmt) {
 
         Context2.font='bold '+HeightOfFontHour+'px Arial';
         Context2.fillText(Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2),ClockRadius/2,70);
-        requestAnimationFrame(self.UpdateClock);
 
     };
 
@@ -146,10 +138,10 @@ function TClockViewCanvas  (name,gmt) {
         Context2.stroke();
         Context2.closePath();
     }
-    self.UpdateClock();
+    setInterval(UpdateClock,500);
 
 
-    document.querySelector("body").style.cssText="border:0px;margin:0px;padding:0px;max-width:900px";
+    document.querySelector("body").style.cssText="border:0px;padding:0px;max-width:900px;margin:1em auto;";
     document.querySelector("body").appendChild(BodyArea);
 }
 TClockViewCanvas.prototype = Object.create(TClock.prototype);

@@ -18,7 +18,10 @@ function TClock () {
             self.Seconds=CurrTime.getSeconds();
         }
     };
-
+    self.SetGMT=function (arg) {
+        GMT+=arg;
+    };
+    self.Go();
     self.Start=function () {
         State=1;
         setInterval(self.Go,1000);
@@ -27,9 +30,8 @@ function TClock () {
     self.Stop=function () {
        State=0;
     };
-    self.SetGMT=function (arg) {
-        GMT+=arg;
-    };
+
+    self.Start();
 
 
 
