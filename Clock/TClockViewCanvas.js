@@ -3,10 +3,23 @@
  */
 "use strict";
 
-function TClockViewCanvas  (name,gmt) {
-    TClock.call(this);
+function TClockViewCanvas  (model,name) {
     var self=this;
-    self.SetGMT(gmt);
+
+
+    var Hour=0;
+    var Minutes=0;
+    var Seconds=0;
+    var Work=1;
+    self.SwitchOn=function () {
+        Work=1;
+    };
+    self.SwitchOff=function () {
+        Work=0;
+    };
+    self.ReturnViewInfo=function () {
+        return [BackgroundArea,BodyArea,name];
+    };
     var ClockRadius=230;
     var ClockBackground="#fcca66";
     var num = 12; // Число часов
@@ -31,19 +44,7 @@ function TClockViewCanvas  (name,gmt) {
     BodyArea.style.height=ClockRadius*1.2+"px";
     BodyArea.style.width=ClockRadius*1.2+"px";
 
-    var ButtonStart= document.createElement("button");
-    var ButtonStop= document.createElement("button");
-    var NameOfContainer=document.createElement("span");
-    NameOfContainer.appendChild(document.createTextNode(name));
-    ButtonStart.style.margin="0 5px 10px 5px";
-    ButtonStop.style.margin="0 5px 10px 5px";
-    ButtonStart.appendChild(document.createTextNode("старт"));
-    ButtonStop.appendChild(document.createTextNode("стоп"));
-    ButtonStart.addEventListener('click',self.Start,false);
-    ButtonStop.addEventListener('click',self.Stop,false);
-    BodyArea.appendChild(ButtonStart);
-    BodyArea.appendChild(ButtonStop);
-    BodyArea.appendChild(NameOfContainer);
+
 
 
 
@@ -107,10 +108,15 @@ function TClockViewCanvas  (name,gmt) {
 
 
     var UpdateClock =function () {
-
-        var HAngle=self.Hour*3600*HourToAngle+self.Minutes*60*HourToAngle;//-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
-        var MAngle=self.Minutes*60*MinuteToAngle;//-StartAngle;
-        var SAngle=self.Seconds*SecondToAngle;//-StartAngle;
+        if(Work){
+            var Time=model.NowTime();
+            Hour=Time[0];
+            Minutes=Time[1];
+            Seconds=Time[2];
+        }
+        var HAngle=Hour*3600*HourToAngle+Minutes*60*HourToAngle;//-StartAngle+(M*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+        var MAngle=Minutes*60*MinuteToAngle;//-StartAngle;
+        var SAngle=Seconds*SecondToAngle;//-StartAngle;
 
         Context2.clearRect (0, 0, ClockRadius, ClockRadius);
 
@@ -123,7 +129,7 @@ function TClockViewCanvas  (name,gmt) {
         Context2.fillStyle = 'black';
 
         Context2.font='bold '+HeightOfFontHour+'px Arial';
-        Context2.fillText(Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2),ClockRadius/2,70);
+        Context2.fillText(Str0L(Hour,2) + ':' + Str0L(Minutes,2) + ':' + Str0L(Seconds,2),ClockRadius/2,70);
         requestAnimationFrame(UpdateClock);
 
     };
@@ -144,5 +150,3 @@ function TClockViewCanvas  (name,gmt) {
     document.querySelector("body").style.cssText="border:0px;padding:0px;max-width:900px;margin:1em auto;";
     document.querySelector("body").appendChild(BodyArea);
 }
-TClockViewCanvas.prototype = Object.create(TClock.prototype);
-TClockViewCanvas.prototype.constructor=TClockViewCanvas; // рекомендуется

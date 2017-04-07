@@ -3,12 +3,24 @@
  */
 "use strict";
 
-function TClockViewDOM (name,gmt) {
+function TClockViewDOM (model,name) {
 
-    TClock.call(this);
     var self=this;
+    var Work=1;
+    self.SwitchOn=function () {
+        Work=1;
+    };
+    self.SwitchOff=function () {
+        Work=0;
+    };
+    self.ReturnViewInfo=function () {
+        return [clock,container,name];
+    };
 
-    self.SetGMT(gmt);
+    var Hour=0;
+    var Minutes=0;
+    var Seconds=0;
+
     var ClockRadius=230;
     var ClockBackground="#fcca66";
     var num = 12; // Число часов
@@ -38,21 +50,6 @@ function TClockViewDOM (name,gmt) {
     var clock=document.createElement("div");
     document.head.querySelector("style").innerHTML="#clock span{display: flex;justify-content: center;align-items: center;height: "+RadiusOfHour+";  width:"+RadiusOfHour+";  background-color: "+ColorOfHour+";  border-radius:"+RadiusOfHour+";  font-weight: 600 ;  font-family: Arial;}.container{float:left;}*{font-family:Arial;font-weight:600;}.container>span {font-weight:100;font-size:13px}";
 
-    var ButtonStart= document.createElement("button");
-    var ButtonStop= document.createElement("button");
-    var NameOfContainer=document.createElement("span");
-    NameOfContainer.appendChild(document.createTextNode(name));
-    ButtonStart.style.margin="0 5px 10px 5px";
-    ButtonStop.style.margin="0 5px 10px 5px";
-    ButtonStart.appendChild(document.createTextNode("старт"));
-    ButtonStop.appendChild(document.createTextNode("стоп"));
-    ButtonStart.addEventListener('click',self.Start,false);
-    ButtonStop.addEventListener('click',self.Stop,false);
-
-
-
-
-
     clock.setAttribute( "id", "clock" );
     clock.style.cssText="width:"+ClockRadius+"px;height:"+ClockRadius+"px;border-radius:"+ClockRadius+"px;background:"+ClockBackground+";position:absolute;";
     TextClock.style.marginTop="4em";
@@ -70,9 +67,7 @@ function TClockViewDOM (name,gmt) {
     var Arrows=[HourArrow,MinuteArrow,SecondArrow];
 
     container.appendChild(clock);
-    container.insertBefore(ButtonStart,clock);
-    container.insertBefore(ButtonStop,clock);
-    container.insertBefore(NameOfContainer,clock);
+
     clock.appendChild(TextClock);
     document.querySelector("body").appendChild(container);
 
@@ -90,13 +85,19 @@ function TClockViewDOM (name,gmt) {
         Arrows[j].style.transformOrigin="center" +" " + ArrowsTransformOrigin + "px";
     }
     var UpdateClock =function () {
-        var HAngle=self.Hour*HourToAngle-StartAngle+(self.Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
+        if(Work){
+            var Time=model.NowTime();
+            Hour=Time[0];
+            Minutes=Time[1];
+            Seconds=Time[2];
+        }
+        var HAngle=Hour*HourToAngle-StartAngle+(Minutes*0.5); // перемещение часовой стрелки  с + градусы от минут часа
         HourArrow.style.transform="rotate("+HAngle+"deg)";
-        var MAngle=self.Minutes*MinuteToAngle-StartAngle;
+        var MAngle=Minutes*MinuteToAngle-StartAngle;
         MinuteArrow.style.transform="rotate("+MAngle+"deg)";
-        var SAngle=self.Seconds*SecondToAngle-StartAngle;
+        var SAngle=Seconds*SecondToAngle-StartAngle;
         SecondArrow.style.transform="rotate("+SAngle+"deg)";
-        var NowTime=Str0L(self.Hour,2) + ':' + Str0L(self.Minutes,2) + ':' + Str0L(self.Seconds,2);
+        var NowTime=Str0L(Hour,2) + ':' + Str0L(Minutes,2) + ':' + Str0L(Seconds,2);
         TextClock.innerHTML=NowTime;
         requestAnimationFrame(UpdateClock);
 
@@ -127,5 +128,3 @@ function TClockViewDOM (name,gmt) {
 
     UpdateClock();
   }
-TClockViewDOM.prototype = Object.create(TClock.prototype);
-TClockViewDOM.prototype.constructor=TClockViewDOM; // рекомендуется
